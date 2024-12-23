@@ -7,7 +7,7 @@ from minizinc import Instance, Model, Solver
 
 class Ui_Dialog(object):
     def __init__(self, parent=None):
-        self.mzn_model = Model('./model2.mzn')
+        self.mzn_model = Model('./modelo.mzn')
         self.solver = Solver.lookup("gecode")
         self.mzn_instance = None
     
