@@ -41,6 +41,23 @@ class Ui_Dialog(object):
             ciudad_x = ciudades[item][0] * self.scale - 5
             ciudad_y = ciudades[item][1] * self.scale + self.padding_y - 5
             self.scene.addEllipse(QtCore.QRectF(ciudad_x, ciudad_y, 10, 10), self.pen, self.greenBrush)
+                # Mostrar valores de matriz_segmento_poblacion y matriz_entorno_empresarial en cada cuadro del mapa
+        matriz_segmento_poblacion = self.mzn_instance._data["matriz_segmento_poblacion"]
+        matriz_entorno_empresarial = self.mzn_instance._data["matriz_entorno_empresarial"]
+
+        for y in range(matriz):
+            for x in range(matriz):
+                value_segmento = matriz_segmento_poblacion[y][x]
+                value_entorno = matriz_entorno_empresarial[y][x]
+                text_item_segmento = QtWidgets.QGraphicsTextItem(str(value_segmento))
+                text_item_segmento.setDefaultTextColor(QtCore.Qt.yellow)
+                text_item_segmento.setPos(x * self.scale + 5, y * self.scale + self.padding_y + 5)
+                self.scene.addItem(text_item_segmento)
+                text_item_entorno = QtWidgets.QGraphicsTextItem(str(value_entorno))
+                text_item_entorno.setDefaultTextColor(QtCore.Qt.cyan)
+                text_item_entorno.setPos(x * self.scale + 5, y * self.scale + self.padding_y + 20)
+                self.scene.addItem(text_item_entorno)
+
 
     def drawSolution(self):
         self.ubicaciones = self.result["ubicaciones"]  # Matriz con las ubicaciones
@@ -115,6 +132,23 @@ class Ui_Dialog(object):
             coord_label.setPos(circle_x + 10, circle_y - 10)
             self.scene.addItem(coord_label)
 
+        # Mostrar valores de matriz_segmento_poblacion y matriz_entorno_empresarial en cada cuadro del mapa
+        matriz_segmento_poblacion = self.mzn_instance._data["matriz_segmento_poblacion"]
+        matriz_entorno_empresarial = self.mzn_instance._data["matriz_entorno_empresarial"]
+
+        for y in range(matriz):
+            for x in range(matriz):
+                value_segmento = matriz_segmento_poblacion[y][x]
+                value_entorno = matriz_entorno_empresarial[y][x]
+                text_item_segmento = QtWidgets.QGraphicsTextItem(str(value_segmento))
+                text_item_segmento.setDefaultTextColor(QtCore.Qt.yellow)
+                text_item_segmento.setPos(x * self.scale + 5, y * self.scale + self.padding_y + 5)
+                self.scene.addItem(text_item_segmento)
+                text_item_entorno = QtWidgets.QGraphicsTextItem(str(value_entorno))
+                text_item_entorno.setDefaultTextColor(QtCore.Qt.cyan)
+                text_item_entorno.setPos(x * self.scale + 5, y * self.scale + self.padding_y + 20)
+                self.scene.addItem(text_item_entorno)
+
         # Actualiza los resultados en el cuadro de texto
         obje = str(self.result.objective)
         result_str = str(self.result)
@@ -132,10 +166,8 @@ class Ui_Dialog(object):
             f"<b>Ubicaciones base:</b> {base_coords}<br>"
             f"<b>Nuevas ubicaciones propuestas:</b> {filtered_coords_}"
         )
+
         self.labelResult.setText(text_result)
-
-
-
 
 
 
@@ -203,20 +235,24 @@ class Ui_Dialog(object):
         self.mainLayout.addWidget(self.labelMessage)
 
         # Fila 2: Botones y ComboBox
-        self.row2Layout = QtWidgets.QHBoxLayout()
+        self.row2Layout = QtWidgets.QVBoxLayout()
+        self.row2Layout.setAlignment(QtCore.Qt.AlignCenter)
         self.row2Layout.setSpacing(10)
         self.pushButtonFile = QtWidgets.QPushButton(Dialog)
         self.pushButtonFile.setObjectName("pushButtonFile")
+        self.pushButtonFile.setFixedWidth(200)
         self.row2Layout.addWidget(self.pushButtonFile)
 
         self.comboBox = QtWidgets.QComboBox(Dialog)
         self.comboBox.setObjectName("comboBox")
         self.comboBox.addItems(["gecode", "chuffed", "coin-bc"])
+        self.comboBox.setFixedWidth(200)
         self.row2Layout.addWidget(self.comboBox)
 
         self.pushButtonSolver = QtWidgets.QPushButton(Dialog)
         self.pushButtonSolver.setObjectName("pushButtonSolver")
         self.row2Layout.addWidget(self.pushButtonSolver)
+        self.pushButtonSolver.setFixedWidth(200)
 
         self.mainLayout.addLayout(self.row2Layout)
 
@@ -299,7 +335,7 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Proyecto ADA II"))
-        self.pushButtonFile.setText(_translate("Dialog", "Seleccionar archivo dzn"))
+        self.pushButtonFile.setText(_translate("Dialog", "Seleccionar archivo"))
         self.pushButtonSolver.setText(_translate("Dialog", "Resolver"))
 
 
